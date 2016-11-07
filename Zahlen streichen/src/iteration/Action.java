@@ -1,8 +1,6 @@
 package iteration;
 
-import org.jgrapht.graph.DefaultEdge;
-
-public class Action extends DefaultEdge {
+public class Action {
 
 	private static final long serialVersionUID = 1L;
 
