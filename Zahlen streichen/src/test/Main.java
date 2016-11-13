@@ -1,36 +1,37 @@
 package test;
 
-import java.util.LinkedList;
-
-import iteration.Action;
-import iteration.Action.ACTION_TYPE;
-import spiel.ZahlenStreichen;
+import iteration.QBasedTree;
 
 public class Main {
 
 	public static void main(String[] args) {
 
-		ZahlenStreichen spiel = new ZahlenStreichen();
+//		ZahlenStreichen spiel = new ZahlenStreichen();
+//
+//		LinkedList<Action> queue = new LinkedList<Action>();
+//
+//		spiel.Do(new Action(ACTION_TYPE.ERASE_NUMBERS, 0, 9, 1, 1));
+//		spiel.unDo();
+//		spiel.Do(spiel.getAllActions().iterator().next());
+//		spiel.Do(spiel.getAllActions().iterator().next());
+//
+//		for (Action a : spiel.getAllActions()) {
+//			spiel.Do(a);
+//			System.out.println(spiel.spiel);
+//			spiel.unDo();
+//		}
 
-		boolean finished = false;
-
-		LinkedList<Action> queue = new LinkedList<Action>();
-
-		int counter = 0;
-
-		int index = 0;
-
-		int depthIndexSize = 0;
-		int depthIndex = 0;
+		QBasedTree t = new QBasedTree();
 		
-		spiel.Do(new Action(ACTION_TYPE.ERASE_NUMBERS, 0, 9, 1, 1));
-		spiel.unDo();
+//		t.next();
+//		t.next();
 		
-		System.out.println(spiel.getAllActions());
-
-		System.out.println(spiel.spiel);
-		
-
+		for (int i = 0; i < 10; i++) {
+			t.next();
+		}
+//		while(true){
+//			t.next();
+//		}
 	}
 
 }

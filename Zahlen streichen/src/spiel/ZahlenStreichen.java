@@ -1,8 +1,8 @@
 package spiel;
 
-import java.util.List;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 import iteration.Action;
 import iteration.Action.ACTION_TYPE;
@@ -108,7 +108,7 @@ public class ZahlenStreichen {
 				spiel.set(a.a, a.valueOfA);
 				spiel.set(a.b, a.valueOfB);
 			} else {
-				System.err.println("error");
+				System.err.println("error unDo");
 			}
 		}
 	}
@@ -126,6 +126,9 @@ public class ZahlenStreichen {
 		for (Action a : history) {
 			Do(a);
 		}
+	}
+	public Action getAddRowAction(){
+		return new Action(ACTION_TYPE.ADD_ROW, spiel.size(), 0, 0, 0);
 	}
 
 }

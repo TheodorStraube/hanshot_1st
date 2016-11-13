@@ -40,6 +40,7 @@ public class Spielfeld {
 
 	public void set(int i, int value) {
 		if (i < 0 || i > size() || value > 9 || value > 9 || value < 0) {
+			System.out.println(toString());
 			throw new IllegalArgumentException();
 		}
 

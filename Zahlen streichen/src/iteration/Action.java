@@ -2,8 +2,6 @@ package iteration;
 
 public class Action {
 
-	private static final long serialVersionUID = 1L;
-
 	public enum ACTION_TYPE {
 		ADD_ROW, ERASE_NUMBERS;
 	}
