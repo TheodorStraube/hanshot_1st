@@ -5,25 +5,26 @@ import java.util.List;
 
 public class Spielfeld {
 
-	private int nextElementPointer = 0;
-
 	private int columnCount = 9;
 
-	private List<Integer> feld;
+	private int nextElementPointer;
+
+	private List<Byte> feld;
 
 	public Spielfeld() {
-		feld = new ArrayList<Integer>();
+		feld = new ArrayList<Byte>();
+		nextElementPointer = 0;
 	}
 
-	public void addNumber(int i) {
-		if (i < 0 || i > 19) {
+	public void addNumber(byte b) {
+		if (b < 0 || b > 19) {
 			throw new IllegalArgumentException();
 		}
-		if (i > 9) {
-			addNumber(1);
-			addNumber(i - 10);
+		if (b > 9) {
+			addNumber((byte) 1);
+			addNumber((byte) (b - 10));
 		} else {
-			feld.add(i);
+			feld.add(b);
 			nextElementPointer++;
 			if (nextElementPointer >= columnCount) {
 				nextElementPointer = 0;
@@ -31,14 +32,17 @@ public class Spielfeld {
 		}
 	}
 
-	public int get(int i) {
+	public byte get(int i) {
 		if (i < 0 || i > size() - 1) {
+			System.out.println(i);
+			System.out.println(toString());
+			System.out.println(size() - 1);
 			throw new IllegalArgumentException();
 		}
 		return feld.get(i);
 	}
 
-	public void set(int i, int value) {
+	public void set(int i, byte value) {
 		if (i < 0 || i > size() || value > 9 || value > 9 || value < 0) {
 			System.out.println(toString());
 			throw new IllegalArgumentException();
@@ -51,49 +55,34 @@ public class Spielfeld {
 		return feld.size();
 	}
 
-	public void rewriteNumbers() {
+	public int rewriteNumbers() {
+		// returns the number of rewrote numbers
+
+		int counter = 0;
 		int startingSize = size();
 		for (int k = 0; k < startingSize; k++) {
-			int p = get(k);
-			if (p != 0)
+			byte p = get(k);
+			if (p != 0) {
+				counter++;
 				addNumber(p);
+			}
 		}
+		return counter;
 	}
 
-	public void eraseRewroteNumbers(int start) {
+	public int eraseRewroteNumbers(int start) {
 		int secondIndex = start;
 		for (int i = 0; i < start; i++) {
 			if (get(i) != 0) {
 				if (get(i) == get(secondIndex)) {
-					set(secondIndex, 0);
+					set(secondIndex, (byte) 0);
 					secondIndex++;
 				} else {
 					System.err.println("error!");
 				}
 			}
 		}
-		checkForEmptySpace();
-	}
-
-	public void checkForEmptySpace() {
-
-		boolean flag = false; // Flag up if nonzeros in a row
-
-		for (int i = 0; i < feld.size(); i++) {
-
-			if (get(i) != 0)
-				flag = true;
-			
-			if (i % 9 == 8) {
-				if (!flag) {
-					for (int l = 0; l < 9; l++) {
-						feld.remove(i - l);
-					}
-					i -= 9;
-				}
-				flag = false;
-			}
-		}
+		return secondIndex - start;
 	}
 
 	@Override

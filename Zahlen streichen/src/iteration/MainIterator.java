@@ -1,6 +1,5 @@
 package iteration;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 
 import org.jgrapht.Graph;

@@ -6,17 +6,17 @@ public class Action {
 		ADD_ROW, ERASE_NUMBERS;
 	}
 
-	public static Action addRow = new Action(ACTION_TYPE.ADD_ROW, 0, 0, 0, 0);
+	public static Action addRow = new Action(ACTION_TYPE.ADD_ROW, 0, 0, (byte) 0, (byte) 0);
 
 	public final ACTION_TYPE type;
 
 	public final int a;
 	public final int b;
 
-	public final int valueOfA;
-	public final int valueOfB;
+	public final byte valueOfA;
+	public final byte valueOfB;
 
-	public Action(ACTION_TYPE type, int a, int b, int valueA, int valueB) {
+	public Action(ACTION_TYPE type, int a, int b, byte valueA, byte valueB) {
 
 		this.type = type;
 		this.a = a;

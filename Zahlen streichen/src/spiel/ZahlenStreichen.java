@@ -9,20 +9,25 @@ import iteration.Action.ACTION_TYPE;
 
 public class ZahlenStreichen {
 
+	public int elemCount;
+
 	public Spielfeld spiel;
 
 	public ArrayList<Action> history;
 
 	public ZahlenStreichen() {
 
+		elemCount = 0;
+
 		spiel = new Spielfeld();
 		history = new ArrayList<Action>();
 
-		for (int i = 1; i < 20; i++) {
+		for (byte i = 1; i < 20; i++) {
 			if (i != 10) {
 				spiel.addNumber(i);
 			}
 		}
+		elemCount = 27;
 	}
 
 	private HashSet<Integer> getMoves(int i) {
@@ -85,40 +90,56 @@ public class ZahlenStreichen {
 	}
 
 	public boolean hasWon() {
-		spiel.checkForEmptySpace();
-		return spiel.isEmpty();
+		return elemCount == 0;
 	}
 
 	public void Do(Action a) {
 		if (a.type == ACTION_TYPE.ADD_ROW) {
-			spiel.rewriteNumbers();
+			elemCount += spiel.rewriteNumbers();
 		} else {
-			spiel.set(a.a, 0);
-			spiel.set(a.b, 0);
+
+			assert (elemCount >= 2);
+			assert (spiel.get(a.a) == spiel.get(a.b));
+			assert (spiel.get(a.a) != 0);
+			assert (false);
+
+			spiel.set(a.a, (byte) 0);
+			spiel.set(a.b, (byte) 0);
+
+			elemCount -= 2;
 		}
 		history.add(a);
 	}
 
-	public void unDo() {
+	public boolean unDo() {
+		if (history.isEmpty()) {
+			return false;
+		}
+
 		Action a = history.remove(history.size() - 1);
 		if (a.type == ACTION_TYPE.ADD_ROW) {
-			spiel.eraseRewroteNumbers(a.a);
+			elemCount -= spiel.eraseRewroteNumbers(a.a);
 		} else {
 			if (spiel.get(a.a) == 0 && spiel.get(a.b) == 0) {
 				spiel.set(a.a, a.valueOfA);
 				spiel.set(a.b, a.valueOfB);
+				elemCount += 2;
 			} else {
 				System.err.println("error unDo");
+				return false;
 			}
 		}
+		return true;
 	}
 
 	public void setState(List<Action> history) {
 		this.spiel = new Spielfeld();
 
+		elemCount = 27;
+		
 		this.history = new ArrayList<Action>();
 
-		for (int i = 1; i < 20; i++) {
+		for (byte i = 1; i < 20; i++) {
 			if (i != 10) {
 				spiel.addNumber(i);
 			}
@@ -127,8 +148,9 @@ public class ZahlenStreichen {
 			Do(a);
 		}
 	}
-	public Action getAddRowAction(){
-		return new Action(ACTION_TYPE.ADD_ROW, spiel.size(), 0, 0, 0);
+
+	public Action getAddRowAction() {
+		return new Action(ACTION_TYPE.ADD_ROW, spiel.size(), 0, (byte) 0, (byte) 0);
 	}
 
 }

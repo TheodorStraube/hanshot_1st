@@ -1,0 +1,33 @@
+1  2  3  4  5  6  7  8  9  
+1  1  1  2  1  3  1  4  1  
+5  1  6  1  7  1  8  1  9
+
+[ACTION: Erase 1 from index 10 and 1 from index 11, ACTION: Erase 9 from index 8 and 1 from index 9,
+ACTION: Erase 8 from index 7 and 2 from index 12,
+ACTION: Erase 9 from index 26 and 1 from index 17,
+
+1  2  3  4  5  6  7  0  0  
+0  0  0  0  1  3  1  4  0  
+5  1  6  1  7  1  8  1  0
+
+
+ACTION: Add Row at index: 27,
+
+1  2  3  4  5  6  7  0  0  
+0  0  0  0  1  3  1  4  0  
+5  1  6  1  7  1  8  1  0  
+1  2  3  4  5  6  7  1  3  
+1  4  5  1  6  1  7  1  8  
+1  
+
+ACTION: Erase 7 from index 42 and 7 from index 33, ACTION: Erase 1 from index 43 and 1 from index 34, ACTION: Erase 1 from index 36 and 1 from index 27,
+
+1  2  3  4  5  6  7  0  0  
+0  0  0  0  1  3  1  4  0  
+5  1  6  1  7  1  8  1  0  
+0  2  3  4  5  6  0  0  3  
+0  4  5  1  6  1  0  0  8  
+1  
+
+ACTION: Add Row at index: 46,
+ACTION: Erase 3 from index 70 and 7 from index 61, ACTION: Erase 1 from index 45 and 1 from index 46]
