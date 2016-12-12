@@ -1,26 +1,25 @@
 package spiel;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-
 import iteration.Action;
 import iteration.Action.ACTION_TYPE;
+
+import java.util.HashSet;
 
 public class ZahlenStreichen {
 
 	public int elemCount;
 
 	public Spielfeld spiel;
-
-	public ArrayList<Action> history;
+	
+	private History history;
 
 	public ZahlenStreichen() {
 
+		history = new History();
+		
 		elemCount = 0;
 
 		spiel = new Spielfeld();
-		history = new ArrayList<Action>();
 
 		for (byte i = 1; i < 20; i++) {
 			if (i != 10) {
@@ -116,7 +115,7 @@ public class ZahlenStreichen {
 			return false;
 		}
 
-		Action a = history.remove(history.size() - 1);
+		Action a = history.pop().get();
 		if (a.type == ACTION_TYPE.ADD_ROW) {
 			elemCount -= spiel.eraseRewroteNumbers(a.a);
 		} else {
@@ -132,12 +131,12 @@ public class ZahlenStreichen {
 		return true;
 	}
 
-	public void setState(List<Action> history) {
+	public void setState(History history) {
 		this.spiel = new Spielfeld();
 
 		elemCount = 27;
 		
-		this.history = new ArrayList<Action>();
+		this.history= new History();
 
 		for (byte i = 1; i < 20; i++) {
 			if (i != 10) {
@@ -147,6 +146,9 @@ public class ZahlenStreichen {
 		for (Action a : history) {
 			Do(a);
 		}
+	}
+	public History getHistory(){
+		return history;
 	}
 
 	public Action getAddRowAction() {

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.ListIterator;
 
+import spiel.History;
 import spiel.ZahlenStreichen;
 
 public class BreadthFirstIterator {
@@ -14,18 +15,18 @@ public class BreadthFirstIterator {
 
 	private int lowestElemCount = 42;
 
-	private ArrayList<ArrayList<Action>> queue;
+	private ArrayList<History> queue;
 
 	private boolean isFinished = false;
 
 	private final long printDelay = 2;
 	private long timer = 0;
 
-	ListIterator<ArrayList<Action>> iterator;
+	ListIterator<History> iterator;
 
 	public BreadthFirstIterator() {
 		spiel = new ZahlenStreichen();
-		queue = new ArrayList<ArrayList<Action>>();
+		queue = new ArrayList<History>();
 
 		bestes = new ZahlenStreichen();
 
@@ -46,13 +47,13 @@ public class BreadthFirstIterator {
 			lowestElemCount = spiel.elemCount;
 
 		} else if (spiel.elemCount == lowestElemCount) {
-			bestes.setState(spiel.history);
+			bestes.setState(spiel.getHistory());
 		}
 		status();
 		if (spiel.hasWon()) {
 			isFinished = true;
 			System.out.println("done: ");
-			System.out.println(spiel.history);
+			// System.out.println(spiel.history);
 			System.exit(0);
 		}
 		appendActions();
@@ -62,9 +63,10 @@ public class BreadthFirstIterator {
 	private void status() {
 		if (System.nanoTime() - timer > printDelay * 1000000000) {
 			timer = System.nanoTime();
-			System.out.println("_____________________________ [STATUS] _____________________________");
+			System.out
+					.println("_____________________________ [STATUS] _____________________________");
 			System.out.println(spiel.spiel);
-			System.out.println(spiel.history);
+			System.out.println(spiel.getHistory());
 			System.out.println("Size: " + queue.size());
 			System.out.println("Smallest Field: " + lowestElemCount);
 			System.out.println(bestes.spiel);
@@ -79,12 +81,12 @@ public class BreadthFirstIterator {
 		HashSet<Action> nextActions = spiel.getAllActions();
 		if (nextActions.isEmpty()) {
 			spiel.Do(spiel.getAddRowAction());
-			iterator.add((ArrayList<Action>) spiel.history.clone());
+			iterator.add(spiel.getHistory().clone());
 			spiel.unDo();
 		}
 		for (Action a : nextActions) {
 			spiel.Do(a);
-			iterator.add((ArrayList<Action>) spiel.history.clone());
+			iterator.add(spiel.getHistory().clone());
 			spiel.unDo();
 		}
 		iterator = queue.listIterator();
