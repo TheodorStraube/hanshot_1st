@@ -3,7 +3,9 @@ package iteration;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.ListIterator;
+import java.util.Set;
 
+import spiel.History;
 import spiel.ZahlenStreichen;
 
 public class BreadthFirstIterator {
@@ -14,20 +16,25 @@ public class BreadthFirstIterator {
 
 	private int lowestElemCount = 42;
 
-	private ArrayList<ArrayList<Action>> queue;
+	private ArrayList<History> queue;
 
 	private boolean isFinished = false;
 
 	private final long printDelay = 2;
 	private long timer = 0;
 
-	ListIterator<ArrayList<Action>> iterator;
+	private Set<Checkpoint> checkpointRepo;
+
+	ListIterator<History> iterator;
 
 	public BreadthFirstIterator() {
-		spiel = new ZahlenStreichen();
-		queue = new ArrayList<ArrayList<Action>>();
 
-		bestes = new ZahlenStreichen();
+		checkpointRepo = new HashSet<Checkpoint>();
+
+		spiel = new ZahlenStreichen(checkpointRepo);
+		queue = new ArrayList<History>();
+
+		bestes = new ZahlenStreichen(checkpointRepo);
 
 		iterator = queue.listIterator();
 
@@ -64,7 +71,7 @@ public class BreadthFirstIterator {
 			timer = System.nanoTime();
 			System.out.println("_____________________________ [STATUS] _____________________________");
 			System.out.println(spiel.spiel);
-			System.out.println(spiel.history);
+			System.out.println(History.reuseCounter);
 			System.out.println("Size: " + queue.size());
 			System.out.println("Smallest Field: " + lowestElemCount);
 			System.out.println(bestes.spiel);
@@ -72,19 +79,20 @@ public class BreadthFirstIterator {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	private void appendActions() {
 		// watchout: iterator gets placed before first element
 		iterator = queue.listIterator(queue.size());
 		HashSet<Action> nextActions = spiel.getAllActions();
 		if (nextActions.isEmpty()) {
 			spiel.Do(spiel.getAddRowAction());
-			iterator.add((ArrayList<Action>) spiel.history.clone());
+			if (!queue.contains(spiel.history)) {
+				iterator.add(spiel.history.clone());
+			}
 			spiel.unDo();
 		}
 		for (Action a : nextActions) {
 			spiel.Do(a);
-			iterator.add((ArrayList<Action>) spiel.history.clone());
+			iterator.add(spiel.history.clone());
 			spiel.unDo();
 		}
 		iterator = queue.listIterator();

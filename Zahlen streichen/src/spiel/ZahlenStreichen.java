@@ -1,11 +1,11 @@
 package spiel;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Set;
 
 import iteration.Action;
 import iteration.Action.ACTION_TYPE;
+import iteration.Checkpoint;
 
 public class ZahlenStreichen {
 
@@ -13,14 +13,18 @@ public class ZahlenStreichen {
 
 	public Spielfeld spiel;
 
-	public ArrayList<Action> history;
+	public History history;
 
-	public ZahlenStreichen() {
+	private final Set<Checkpoint> checkpointRepository;
+
+	public ZahlenStreichen(Set<Checkpoint> checkpointRepo) {
 
 		elemCount = 0;
 
+		this.checkpointRepository = checkpointRepo;
+
 		spiel = new Spielfeld();
-		history = new ArrayList<Action>();
+		history = new History(checkpointRepo);
 
 		for (byte i = 1; i < 20; i++) {
 			if (i != 10) {
@@ -116,7 +120,7 @@ public class ZahlenStreichen {
 			return false;
 		}
 
-		Action a = history.remove(history.size() - 1);
+		Action a = history.pop();
 		if (a.type == ACTION_TYPE.ADD_ROW) {
 			elemCount -= spiel.eraseRewroteNumbers(a.a);
 		} else {
@@ -132,12 +136,12 @@ public class ZahlenStreichen {
 		return true;
 	}
 
-	public void setState(List<Action> history) {
+	public void setState(History history) {
 		this.spiel = new Spielfeld();
 
 		elemCount = 27;
-		
-		this.history = new ArrayList<Action>();
+
+		this.history = new History(checkpointRepository);
 
 		for (byte i = 1; i < 20; i++) {
 			if (i != 10) {

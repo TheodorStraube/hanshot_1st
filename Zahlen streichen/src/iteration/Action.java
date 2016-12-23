@@ -40,9 +40,7 @@ public class Action {
 
 	@Override
 	public boolean equals(Object o) {
-		if (o instanceof Action && ((Action) o).type == ACTION_TYPE.ADD_ROW) {
-			return true;
-		} else if (o instanceof Action && ((Action) o).type == type) {
+		if (o instanceof Action && ((Action) o).type == type) {
 			Action a = (Action) o;
 			return (a.a == this.a && a.b == b && a.valueOfA == valueOfA && a.valueOfB == valueOfB)
 					|| (a.a == b && a.b == this.a && a.valueOfA == valueOfB && a.valueOfB == valueOfA);

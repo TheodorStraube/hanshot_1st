@@ -1,11 +1,13 @@
 package test;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.ListIterator;
 
 import iteration.Action;
-import iteration.BreadthFirstIterator;
 import iteration.Action.ACTION_TYPE;
+import iteration.BreadthFirstIterator;
+import iteration.Checkpoint;
 import spiel.ZahlenStreichen;
 
 public class Main {
@@ -29,24 +31,10 @@ public class Main {
 
 		BreadthFirstIterator it = new BreadthFirstIterator();
 
-		ArrayList<Integer> list = new ArrayList<Integer>();
-		ListIterator<Integer> iterator = list.listIterator(0);
-		for (int i = 0; i < 10; i++) {
-			iterator.add(i);
-			// System.out.println("prev: " + iterator.previous());
-		}
 
-		iterator = list.listIterator();
-		System.out.println("of size: " + list.size());
-		for (int i = 0; i < 10; i++) {
-			System.out.println("remove: " + iterator.next());
-			iterator.remove();
-		}
+		HashSet<Checkpoint> repo = new HashSet<Checkpoint>();
 
-		for (int i : list) {
-			System.out.println(i);
-		}
-		ZahlenStreichen z = new ZahlenStreichen();
+		ZahlenStreichen z = new ZahlenStreichen(repo);
 
 		System.out.println(z.spiel);
 
@@ -80,9 +68,9 @@ public class Main {
 		// t.next();
 		// t.next();
 
-		// for (int i = 0; i < 100000; i++) {
-		// it.next();
-		// }
+//		for (int i = 0; i < 100000; i++) {
+//			it.next();
+//		}
 		while (true) {
 			it.next();
 		}
