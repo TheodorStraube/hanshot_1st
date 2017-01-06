@@ -29,6 +29,7 @@ public class BreadthFirstIterator {
 
 	public BreadthFirstIterator() {
 
+
 		checkpointRepo = new HashSet<Checkpoint>();
 
 		spiel = new ZahlenStreichen(checkpointRepo);
@@ -53,13 +54,13 @@ public class BreadthFirstIterator {
 			lowestElemCount = spiel.elemCount;
 
 		} else if (spiel.elemCount == lowestElemCount) {
-			bestes.setState(spiel.history);
+			bestes.setState(spiel.getHistory());
 		}
 		status();
 		if (spiel.hasWon()) {
 			isFinished = true;
 			System.out.println("done: ");
-			System.out.println(spiel.history);
+			// System.out.println(spiel.history);
 			System.exit(0);
 		}
 		appendActions();
@@ -69,9 +70,11 @@ public class BreadthFirstIterator {
 	private void status() {
 		if (System.nanoTime() - timer > printDelay * 1000000000) {
 			timer = System.nanoTime();
-			System.out.println("_____________________________ [STATUS] _____________________________");
+			System.out
+					.println("_____________________________ [STATUS] _____________________________");
 			System.out.println(spiel.spiel);
 			System.out.println(History.reuseCounter);
+
 			System.out.println("Size: " + queue.size());
 			System.out.println("Smallest Field: " + lowestElemCount);
 			System.out.println(bestes.spiel);
@@ -85,14 +88,16 @@ public class BreadthFirstIterator {
 		HashSet<Action> nextActions = spiel.getAllActions();
 		if (nextActions.isEmpty()) {
 			spiel.Do(spiel.getAddRowAction());
-			if (!queue.contains(spiel.history)) {
-				iterator.add(spiel.history.clone());
+			
+			if (!queue.contains(spiel.getHistory())) {
+				iterator.add(spiel.getHistory().clone());
 			}
+
 			spiel.unDo();
 		}
 		for (Action a : nextActions) {
 			spiel.Do(a);
-			iterator.add(spiel.history.clone());
+			iterator.add(spiel.getHistory().clone());
 			spiel.unDo();
 		}
 		iterator = queue.listIterator();

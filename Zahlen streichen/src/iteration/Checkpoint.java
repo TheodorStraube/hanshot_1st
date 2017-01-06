@@ -10,20 +10,27 @@ public class Checkpoint {
 
 	private HashSet<Action> allActions;
 
-	public Checkpoint(List<Action> queue) {
+	private Action addRow;
+
+	public Checkpoint(List<Action> queue, Action addRow) {
 		this.queue = new ArrayList<Action>(queue);
 		allActions = new HashSet<>(queue);
+		this.addRow = addRow;
 	}
 
 	@Override
 	public int hashCode() {
-		return queue.size();
+		return queue.size() + addRow.hashCode();
+	}
+
+	public Action getAddRowAction() {
+		return addRow;
 	}
 
 	@Override
 	public boolean equals(Object o) {
 		if (o instanceof Checkpoint) {
-			return allActions.equals(((Checkpoint) o).allActions);
+			return allActions.equals(((Checkpoint) o).allActions) && addRow.equals(((Checkpoint) o).getAddRowAction());
 		}
 		return false;
 	}
@@ -32,8 +39,7 @@ public class Checkpoint {
 		return this.queue.isEmpty();
 	}
 
-	@SuppressWarnings("unchecked")
 	public ArrayList<Action> getElements() {
-		return (ArrayList<Action>) queue.clone();
+		return queue;
 	}
 }

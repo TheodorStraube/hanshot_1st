@@ -13,17 +13,18 @@ public class ZahlenStreichen {
 
 	public Spielfeld spiel;
 
-	public History history;
+	private History history;
 
 	private final Set<Checkpoint> checkpointRepository;
 
 	public ZahlenStreichen(Set<Checkpoint> checkpointRepo) {
-
+		
 		elemCount = 0;
 
 		this.checkpointRepository = checkpointRepo;
 
 		spiel = new Spielfeld();
+
 		history = new History(checkpointRepo);
 
 		for (byte i = 1; i < 20; i++) {
@@ -120,7 +121,9 @@ public class ZahlenStreichen {
 			return false;
 		}
 
-		Action a = history.pop();
+
+		Action a = history.pop().get();
+
 		if (a.type == ACTION_TYPE.ADD_ROW) {
 			elemCount -= spiel.eraseRewroteNumbers(a.a);
 		} else {
@@ -151,6 +154,10 @@ public class ZahlenStreichen {
 		for (Action a : history) {
 			Do(a);
 		}
+	}
+
+	public History getHistory() {
+		return history;
 	}
 
 	public Action getAddRowAction() {

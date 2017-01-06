@@ -2,13 +2,14 @@ package spiel;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Optional;
 import java.util.Set;
 
 import iteration.Action;
 import iteration.Action.ACTION_TYPE;
 import iteration.Checkpoint;
 
-public class History implements Iterable<Action> {
+public class History implements Iterable<Action>, Cloneable {
 
 	public static int reuseCounter = 0;
 
@@ -31,24 +32,25 @@ public class History implements Iterable<Action> {
 		queue.add(a);
 
 		if (a.type == ACTION_TYPE.ADD_ROW) {
-			reachCheckpoint();
+			reachCheckpoint(a);
 		}
 	}
 
-	public Action pop() {
-		if (queue.isEmpty()) {
-			if (checkpoints.isEmpty()) {
-				System.err.println("History is empty - cant pop.");
-				return null;
-			}
-			Checkpoint c = checkpoints.remove(checkpoints.size() - 1);
-			queue = c.getElements();
+	public Optional<Action> pop() {
+		if (queue.isEmpty() && checkpoints.isEmpty()) {
+			return Optional.empty();
+		} else if (!queue.isEmpty()) {
+			return Optional.of(queue.remove(queue.size() - 1));
+		} else {
+			Checkpoint lastCheckpoint = checkpoints.remove(checkpoints.size() - 1);
+			Action lastAction = lastCheckpoint.getAddRowAction();
+			queue = lastCheckpoint.getElements();
+			return Optional.of(lastAction);
 		}
-		return queue.remove(queue.size() - 1);
 	}
 
-	private void reachCheckpoint() {
-		Checkpoint checkpoint = new Checkpoint(queue);
+	private void reachCheckpoint(Action addRow) {
+		Checkpoint checkpoint = new Checkpoint(queue, addRow);
 		queue.clear();
 		for (Checkpoint c : checkpointRepository) {
 			if (c.equals(checkpoint)) {
@@ -61,18 +63,22 @@ public class History implements Iterable<Action> {
 		checkpoints.add(checkpoint);
 	}
 
+	private ArrayList<Action> getAll() {
+		ArrayList<Action> list = new ArrayList<Action>();
+		for (Checkpoint c : checkpoints) {
+			list.addAll(c.getElements());
+		}
+		list.addAll(queue);
+		return list;
+	}
+
 	public boolean isEmpty() {
 		return checkpoints.isEmpty() && queue.isEmpty();
 	}
 
 	@Override
 	public Iterator<Action> iterator() {
-		ArrayList<Action> list = new ArrayList<Action>();
-		for (Checkpoint c : checkpoints) {
-			list.addAll(c.getElements());
-		}
-		list.addAll(queue);
-		return list.iterator();
+		return getAll().iterator();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -108,5 +114,4 @@ public class History implements Iterable<Action> {
 		}
 		return h.checkpoints.equals(checkpoints);
 	}
-
 }
