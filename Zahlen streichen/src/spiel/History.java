@@ -54,7 +54,7 @@ public class History implements Iterable<Action>, Cloneable {
 		queue.clear();
 		for (Checkpoint c : checkpointRepository) {
 			if (c.equals(checkpoint)) {
-				reuseCounter++;
+				
 				checkpoints.add(c);
 				return;
 			}
@@ -113,5 +113,20 @@ public class History implements Iterable<Action>, Cloneable {
 			return false;
 		}
 		return h.checkpoints.equals(checkpoints);
+	}
+
+	@Override
+	public String toString() {
+		String s = "History of " + checkpoints.size() + " Checkpoints: \n";
+		int i = 0;
+		for (Checkpoint c : checkpoints) {
+			i++;
+			s += "Checkpoint [" + i + "]" + c + '\n';
+		}
+		s += "Queue (" +queue.size()+"): ";
+		for (Action a : queue) {
+			s += ", " + a;
+		}
+		return s;
 	}
 }

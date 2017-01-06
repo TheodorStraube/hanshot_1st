@@ -72,12 +72,18 @@ public class Spielfeld {
 
 	public int eraseRewroteNumbers(int start) {
 		int secondIndex = start;
+		while(get(secondIndex) == 0){
+			secondIndex--;
+		}
 		for (int i = 0; i < start; i++) {
 			if (get(i) != 0) {
 				if (get(i) == get(secondIndex)) {
 					set(secondIndex, (byte) 0);
 					secondIndex++;
 				} else {
+					System.out.println(toString());
+					System.out.println();
+					System.out.println(start);
 					System.err.println("error!");
 				}
 			}

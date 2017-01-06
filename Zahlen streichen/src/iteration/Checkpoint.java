@@ -42,4 +42,15 @@ public class Checkpoint {
 	public ArrayList<Action> getElements() {
 		return queue;
 	}
+
+	@Override
+	public String toString() {
+		String s = "";
+
+		for (Action a : getElements()) {
+			s += a;
+		}
+
+		return s;
+	}
 }

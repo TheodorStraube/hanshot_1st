@@ -18,7 +18,7 @@ public class ZahlenStreichen {
 	private final Set<Checkpoint> checkpointRepository;
 
 	public ZahlenStreichen(Set<Checkpoint> checkpointRepo) {
-		
+
 		elemCount = 0;
 
 		this.checkpointRepository = checkpointRepo;
@@ -99,28 +99,42 @@ public class ZahlenStreichen {
 	}
 
 	public void Do(Action a) {
+
+		if (!isValidDo(a)) {
+			System.out.println(
+					(elemCount >= 2) + ", " + (spiel.get(a.a) == spiel.get(a.b)) + ", " + (spiel.get(a.a) != 0));
+			System.err.println(a + " kann nicht auf " + spiel + " angewandt werden.");
+			return;
+		}
+
 		if (a.type == ACTION_TYPE.ADD_ROW) {
 			elemCount += spiel.rewriteNumbers();
 		} else {
-
-			assert (elemCount >= 2);
-			assert (spiel.get(a.a) == spiel.get(a.b));
-			assert (spiel.get(a.a) != 0);
-			assert (false);
 
 			spiel.set(a.a, (byte) 0);
 			spiel.set(a.b, (byte) 0);
 
 			elemCount -= 2;
 		}
+
 		history.add(a);
+
+	}
+
+	private boolean isValidDo(Action a) {
+		if (a.type == ACTION_TYPE.ADD_ROW) {
+			return a.a == spiel.size() && getAllActions().size() == 0;
+		} else {
+
+			return elemCount >= 2 && (spiel.get(a.a) == spiel.get(a.b) || spiel.get(a.a) + spiel.get(a.b) == 10)
+					&& spiel.get(a.a) != 0;
+		}
 	}
 
 	public boolean unDo() {
 		if (history.isEmpty()) {
 			return false;
 		}
-
 
 		Action a = history.pop().get();
 
