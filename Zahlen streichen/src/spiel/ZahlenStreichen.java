@@ -1,22 +1,23 @@
 package spiel;
 
-import iteration.Action;
-import iteration.Action.ACTION_TYPE;
-
 import java.util.HashSet;
 
-public class ZahlenStreichen {
+import iteration.Action;
+import iteration.Action.ACTION_TYPE;
+import iteration.Seed;
+
+public class ZahlenStreichen implements Seed<Action> {
 
 	public int elemCount;
 
 	public Spielfeld spiel;
-	
+
 	private History history;
 
 	public ZahlenStreichen() {
 
 		history = new History();
-		
+
 		elemCount = 0;
 
 		spiel = new Spielfeld();
@@ -119,7 +120,7 @@ public class ZahlenStreichen {
 		if (a.type == ACTION_TYPE.ADD_ROW) {
 			elemCount -= spiel.eraseRewroteNumbers(a.a);
 		} else {
-			if (spiel.get(a.a) == 0 && spiel.get(a.b) == 0) {
+			if (spiel.get(a.b) == 0) {
 				spiel.set(a.a, a.valueOfA);
 				spiel.set(a.b, a.valueOfB);
 				elemCount += 2;
@@ -135,8 +136,8 @@ public class ZahlenStreichen {
 		this.spiel = new Spielfeld();
 
 		elemCount = 27;
-		
-		this.history= new History();
+
+		this.history = new History();
 
 		for (byte i = 1; i < 20; i++) {
 			if (i != 10) {
@@ -147,7 +148,8 @@ public class ZahlenStreichen {
 			Do(a);
 		}
 	}
-	public History getHistory(){
+
+	public History getHistory() {
 		return history;
 	}
 
@@ -155,4 +157,19 @@ public class ZahlenStreichen {
 		return new Action(ACTION_TYPE.ADD_ROW, spiel.size(), 0, (byte) 0, (byte) 0);
 	}
 
+	@Override
+	public Iterable<Action> getFork() {
+		return getAllActions();
+	}
+
+	@Override
+	public void out() {
+		unDo();
+
+	}
+
+	@Override
+	public void in(Action branch) {
+		Do(branch);
+	}
 }

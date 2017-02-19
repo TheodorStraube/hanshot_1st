@@ -1,11 +1,10 @@
 package spiel;
 
-import iteration.Action;
-
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.ListIterator;
 import java.util.Optional;
+
+import iteration.Action;
 
 public class History implements Iterable<Action>, Cloneable{
 

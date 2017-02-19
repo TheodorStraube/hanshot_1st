@@ -1,6 +1,6 @@
 package iteration;
 
-public class Action {
+public class Action implements Branch{
 
 	public enum ACTION_TYPE {
 		ADD_ROW, ERASE_NUMBERS;
