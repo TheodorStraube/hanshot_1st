@@ -1,6 +1,6 @@
 package iteration;
 
-public interface Seed<T extends Branch> {
+public interface Seed<T extends Branch> extends Cloneable {
 
 	public Iterable<T> getFork();
 
@@ -11,5 +11,9 @@ public interface Seed<T extends Branch> {
 	public default boolean isFinished() {
 		return !getFork().iterator().hasNext();
 	}
+
+	public void reset();
+
+	public Seed<T> clone();
 
 }

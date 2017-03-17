@@ -1,15 +1,14 @@
 package spiel;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class Spielfeld {
+public class Spielfeld implements Cloneable{
 
 	private int columnCount = 9;
 
 	private int nextElementPointer;
 
-	private List<Byte> feld;
+	private ArrayList<Byte> feld;
 
 	public Spielfeld() {
 		feld = new ArrayList<Byte>();
@@ -107,5 +106,17 @@ public class Spielfeld {
 
 	public boolean isEmpty() {
 		return feld.isEmpty();
+	}
+	@Override
+	public Spielfeld clone(){
+		Spielfeld s = new Spielfeld();
+		
+		s.nextElementPointer = nextElementPointer;
+		
+		@SuppressWarnings("unchecked")
+		ArrayList<Byte> clone = (ArrayList<Byte>) feld.clone();
+		s.feld = clone; 
+		
+		return s;
 	}
 }

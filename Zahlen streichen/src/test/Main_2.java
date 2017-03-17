@@ -1,7 +1,6 @@
 package test;
 
-import iteration.Action;
-import iteration.Generator;
+import spiel.MyGenerator;
 import spiel.ZahlenStreichen;
 
 public class Main_2 {
@@ -10,13 +9,16 @@ public class Main_2 {
 
 		ZahlenStreichen z = new ZahlenStreichen();
 
-		Generator<ZahlenStreichen, Action> gen = new Generator<ZahlenStreichen, Action>(z);
+		MyGenerator gen = new MyGenerator(z);
 
-		for (int i = 0; i < 10; i++) {
+//		for (int i = 0; i < 1000; i++) {
+//			gen.next();
+//		}
+		while(true){
 			gen.next();
 		}
 
-		System.out.println("done");
+//		System.out.println("done");
 
 	}
 

@@ -1,5 +1,6 @@
 package spiel;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import iteration.Action;
@@ -12,26 +13,17 @@ public class ZahlenStreichen implements Seed<Action> {
 
 	public Spielfeld spiel;
 
-	private History history;
+	public ArrayList<Action> history;
 
 	public ZahlenStreichen() {
 
-		history = new History();
+		history = new ArrayList<Action>();
 
-		elemCount = 0;
-
-		spiel = new Spielfeld();
-
-		for (byte i = 1; i < 20; i++) {
-			if (i != 10) {
-				spiel.addNumber(i);
-			}
-		}
-		elemCount = 27;
+		reset();
 	}
 
-	private HashSet<Integer> getMoves(int i) {
-		HashSet<Integer> list = new HashSet<Integer>();
+	private ArrayList<Integer> getMoves(int i) {
+		ArrayList<Integer> list = new ArrayList<Integer>();
 		int number = spiel.get(i);
 
 		if (number == 0) {
@@ -71,7 +63,7 @@ public class ZahlenStreichen implements Seed<Action> {
 
 	public HashSet<Action> getActions(int i) {
 		HashSet<Action> list = new HashSet<Action>();
-		HashSet<Integer> intMoves = getMoves(i);
+		ArrayList<Integer> intMoves = getMoves(i);
 
 		for (Integer move : intMoves) {
 			list.add(new Action(ACTION_TYPE.ERASE_NUMBERS, i, move, spiel.get(i), spiel.get(move)));
@@ -97,11 +89,12 @@ public class ZahlenStreichen implements Seed<Action> {
 		if (a.type == ACTION_TYPE.ADD_ROW) {
 			elemCount += spiel.rewriteNumbers();
 		} else {
+			byte valueA = spiel.get(a.a);
+			byte valueB = spiel.get(a.b);
 
 			assert (elemCount >= 2);
-			assert (spiel.get(a.a) == spiel.get(a.b));
-			assert (spiel.get(a.a) != 0);
-			assert (false);
+			assert (valueA == valueB || valueA + valueB == 10);
+			assert (valueA != 0 && valueB != 0);
 
 			spiel.set(a.a, (byte) 0);
 			spiel.set(a.b, (byte) 0);
@@ -111,46 +104,45 @@ public class ZahlenStreichen implements Seed<Action> {
 		history.add(a);
 	}
 
-	public boolean unDo() {
-		if (history.isEmpty()) {
-			return false;
-		}
+	public void unDo() {
 
-		Action a = history.pop().get();
+		assert (!history.isEmpty());
+
+		Action a = history.remove(history.size() - 1);
+
 		if (a.type == ACTION_TYPE.ADD_ROW) {
 			elemCount -= spiel.eraseRewroteNumbers(a.a);
 		} else {
-			if (spiel.get(a.b) == 0) {
-				spiel.set(a.a, a.valueOfA);
-				spiel.set(a.b, a.valueOfB);
-				elemCount += 2;
-			} else {
-				System.err.println("error unDo");
-				return false;
-			}
+			assert (spiel.get(a.a) == 0 && spiel.get(a.b) == 0);
+
+			spiel.set(a.a, a.valueOfA);
+			spiel.set(a.b, a.valueOfB);
+
+			elemCount += 2;
 		}
-		return true;
 	}
 
 	public void setState(History history) {
+
+		reset();
+
+		for (Action a : history) {
+			Do(a);
+		}
+	}
+
+	public void reset() {
 		this.spiel = new Spielfeld();
 
 		elemCount = 27;
 
-		this.history = new History();
+		this.history.clear();
 
 		for (byte i = 1; i < 20; i++) {
 			if (i != 10) {
 				spiel.addNumber(i);
 			}
 		}
-		for (Action a : history) {
-			Do(a);
-		}
-	}
-
-	public History getHistory() {
-		return history;
 	}
 
 	public Action getAddRowAction() {
@@ -165,11 +157,60 @@ public class ZahlenStreichen implements Seed<Action> {
 	@Override
 	public void out() {
 		unDo();
-
 	}
 
 	@Override
 	public void in(Action branch) {
 		Do(branch);
+	}
+
+	@Override
+	public ZahlenStreichen clone() {
+		ZahlenStreichen z = new ZahlenStreichen();
+		z.elemCount = elemCount;
+		z.spiel = spiel.clone();
+
+		@SuppressWarnings("unchecked")
+		ArrayList<Action> clone = (ArrayList<Action>) history.clone();
+		z.history = clone;
+
+		return z;
+
+	}
+
+	@Override
+	public String toString() {
+		return spiel.toString();
+	}
+
+	@Override
+	public int hashCode() {
+		return 0;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+
+		if (o instanceof ZahlenStreichen) {
+			ZahlenStreichen z = (ZahlenStreichen) o;
+
+			if (z.spiel.size() == spiel.size()) {
+
+				for (int i = 0; i < spiel.size(); ++i) {
+					if (z.spiel.get(i) != spiel.get(i)) {
+						return false;
+					}
+				}
+
+				return true;
+			}
+
+		}
+
+		return false;
+	}
+	@Override
+	public boolean isFinished(){
+		return hasWon();
 	}
 }
